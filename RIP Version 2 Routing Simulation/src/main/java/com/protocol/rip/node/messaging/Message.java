@@ -1,8 +1,8 @@
-package com.protocol.rip;
+package com.protocol.rip.node.messaging;
 
-import java.io.Serializable;
+import com.protocol.rip.node.Address;
 
-public class Message implements Serializable {
+public class Message {
 
     private Address destAddr;
     private String text;

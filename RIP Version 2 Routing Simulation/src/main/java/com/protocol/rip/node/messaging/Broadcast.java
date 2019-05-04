@@ -1,4 +1,4 @@
-package com.protocol.rip;
+package com.protocol.rip.node.messaging;
 
 public interface Broadcast {
 

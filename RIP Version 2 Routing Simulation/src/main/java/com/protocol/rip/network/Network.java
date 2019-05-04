@@ -1,4 +1,9 @@
-package com.protocol.rip;
+package com.protocol.rip.network;
+
+import com.protocol.rip.node.Address;
+import com.protocol.rip.node.Node;
+import com.protocol.rip.node.NodeDetails;
+import com.protocol.rip.node.table.RoutingRow;
 
 import java.net.SocketException;
 import java.util.*;
@@ -28,6 +33,7 @@ public class Network {
     public void addNode(NodeDetails one, NodeDetails two) {
         two.addNeightbour((NodeDetails)one);
         one.addNeightbour((NodeDetails)two);
+
     }
 
     public void addNewNode(Node node) throws SocketException {
@@ -62,6 +68,7 @@ public class Network {
             details.get(i).removeNeightbour(node);
             node.removeNeightbour(details.get(i));
         }
+        removeRoutingRows(address);
         executions.get(address).stop();
         executions.remove(address);
     }
@@ -82,12 +89,34 @@ public class Network {
         }
     }
 
+    public static void removeRoutingRows(Address address) {
+        for (Node node : Network.getNodes().values()) {
+            for (int i = node.getTable().getRoutingRows().size()-1; i >= 0; i--) {
+                RoutingRow row = node.getTable().getRoutingRows().get(i);
+                if (row.getAddress().equals(address) || row.getNextHop().get(0).equals(address)) {
+                    node.getTable().getRoutingRows().remove(row);
+                }
+            }
+        }
+    }
+
+    public void showRoutingTables() {
+        for (Node node : nodes.values()) {
+            System.out.printf("From node %s\n", node.getAddress());
+            node.getTable().getRoutingRows().forEach(System.out::println);
+        }
+    }
+
     public void linkNodes(Address first, Address second) {
         addNode(nodes.get(first), nodes.get(second));
     }
 
     public Node getNode(Address address) {
         return nodes.get(address);
+    }
+
+    public Node getInitialNode() {
+        return initialNode;
     }
 
     public static HashMap<Address, Node> getNodes() {

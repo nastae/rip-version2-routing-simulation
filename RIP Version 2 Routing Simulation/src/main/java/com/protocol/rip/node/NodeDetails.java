@@ -1,9 +1,13 @@
-package com.protocol.rip;
+package com.protocol.rip.node;
+
+import com.protocol.rip.node.messaging.Broadcast;
+import com.protocol.rip.node.table.RoutingTable;
+import com.protocol.rip.node.table.RoutingTableMessaging;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class NodeDetails implements Broadcast {
+public abstract class NodeDetails implements Broadcast, RoutingTableMessaging {
 
     protected boolean visited;
     protected Address address;

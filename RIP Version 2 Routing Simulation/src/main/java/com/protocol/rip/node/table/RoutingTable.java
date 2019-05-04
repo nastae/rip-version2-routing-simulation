@@ -1,22 +1,18 @@
-package com.protocol.rip;
+package com.protocol.rip.node.table;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import com.protocol.rip.node.Address;
+import com.protocol.rip.node.NodeDetails;
+
+import java.util.*;
 
 public class RoutingTable {
 
-    private List<RoutingRow> rows;
+    private Vector<RoutingRow> rows;
     private HashMap<Address, RoutingRow> mapRows;
 
     public RoutingTable() {
-        rows = new ArrayList<>();
+        rows = new Vector<>();
         mapRows = new HashMap<>();
-    }
-
-    public RoutingTable(List<RoutingRow> rows) {
-        this.rows = rows;
     }
 
     public List<Address> getNextHop(Address address) {
@@ -25,7 +21,7 @@ public class RoutingTable {
                 : new ArrayList<>();
     }
 
-    public List<RoutingRow> getRoutingRows() {
+    public Vector<RoutingRow> getRoutingRows() {
         return rows;
     }
 
@@ -41,6 +37,16 @@ public class RoutingTable {
     public void update(Address address, RoutingRow oldRow, RoutingRow newRow) {
         rows.set(rows.indexOf(oldRow), newRow);
         mapRows.put(address, newRow);
+    }
+
+    public void update(Address address, int index, RoutingRow newRow) {
+        rows.set(index, newRow);
+        mapRows.put(address, newRow);
+    }
+
+    public void remove(RoutingRow row) {
+        rows.remove(row);
+        mapRows.remove(row);
     }
 
     public Optional<NodeDetails> getNextHopNode(List<NodeDetails> neightbours, Address address) {

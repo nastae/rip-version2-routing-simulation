@@ -1,4 +1,6 @@
-package com.protocol.rip;
+package com.protocol.rip.node.table;
+
+import com.protocol.rip.node.Address;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,25 +11,11 @@ public class RoutingRow {
     private List<Address> nextHop;
     private int count;
 
-    public RoutingRow(Address address, List<Address> nextHop, int count) {
-        this.address = address;
-        this.nextHop = nextHop;
-        this.count = count;
-    }
-
     public RoutingRow(Address address, Address nextHop, int count) {
         this.address = address;
         this.nextHop = new ArrayList<>();
         this.nextHop.add(nextHop);
         this.count = count;
-    }
-
-    public RoutingRow(String ip, int port, Address nextHop, int count) {
-        this(new Address(ip, port), nextHop, count);
-    }
-
-    public RoutingRow(String ip, int port, String nextHopIp, int nextHopPort , int count) {
-        this(new Address(ip, port), new Address(nextHopIp, nextHopPort), count);
     }
 
     public Address getAddress() {
@@ -62,5 +50,17 @@ public class RoutingRow {
     @Override
     public String toString() {
         return String.format("Address %s:%s, nextHope %s, count %d", address.getIp(), address.getPort(), nextHop, count);
+    }
+
+    @Override
+    public int hashCode() {
+        return 35*(address.hashCode() + nextHop.get(0).hashCode() + count);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof RoutingRow)
+            return obj.hashCode() == this.hashCode();
+        return false;
     }
 }
